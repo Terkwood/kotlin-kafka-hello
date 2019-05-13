@@ -9,7 +9,7 @@
 Connect to a kafka container, with an external IP of `192.168.86.240`:
 
 ```sh
-./start-kafka-shell.sh 192.168.86.240 192.168.86.240:2181
+./start-kafka-shell.sh 192.168.1.111 192.168.1.111:2181
 ```
 
 Once inside a kafka container, we ran a producer via the following:
