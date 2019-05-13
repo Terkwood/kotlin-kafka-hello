@@ -1,4 +1,4 @@
-package farm.terkwood.kotlin.kafka.hello
+package hello
 
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.Producer
@@ -8,8 +8,11 @@ import java.util.Properties
 
 
 fun main(args: Array<String>) {
-    val producer = createProducer(args[0])
-    producer.send(ProducerRecord(args[1], args[2]))
+    val brokers = args[0]
+    val topic = args[1]
+    val message = args[2]
+    val producer = createProducer(brokers)
+    producer.send(ProducerRecord(topic, message))
 }
 
 private fun createProducer(brokers: String): Producer<String, String> {
