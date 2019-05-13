@@ -6,15 +6,16 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
-
 fun main(args: Array<String>) {
     val brokers = args[0]
     val topic = args[1]
-    val message = args[2]
     val producer = createProducer(brokers)
-    val futureResult = producer.send(ProducerRecord(topic, message))
-    // wait for ack
-    futureResult.get()
+    for (i in 0x00..0xFF) {
+        val message = "hello $i"
+        val futureResult = producer.send(ProducerRecord(topic, message))
+        // wait for ack
+        futureResult.get()
+    }
 }
 
 private fun createProducer(brokers: String): Producer<String, String> {
