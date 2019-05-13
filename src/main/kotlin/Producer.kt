@@ -5,16 +5,21 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
+import kotlinx.coroutines.*
 
 fun main(args: Array<String>) {
     val brokers = args[0]
     val topic = args[1]
     val producer = createProducer(brokers)
-    for (i in 0x00..0xFF) {
-        val message = "hello $i"
-        val futureResult = producer.send(ProducerRecord(topic, message))
-        // wait for ack
-        futureResult.get()
+    runBlocking {
+        for (i in 0x00..0xFF) {
+            launch {
+                val message = "hello $i"
+                val futureResult = producer.send(ProducerRecord(topic, message))
+                // wait for ack
+                futureResult.get()
+            }
+        }
     }
 }
 
