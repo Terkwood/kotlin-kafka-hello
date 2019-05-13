@@ -6,6 +6,7 @@ import java.util.Properties
 
 fun main(args: Array<String>) {
     val producer = createProducer(args[0])
+    producer.send(ProducerRecord(args[1], args[2]))
 }
 
 private fun createProducer(brokers: String): Producer<String, String> {
