@@ -33,4 +33,3 @@ Or a consumer:
 $KAFKA_HOME/bin/kafka-console-consumer.sh --topic topic \
 --bootstrap-server `broker-list.sh|head`
 ```
-
