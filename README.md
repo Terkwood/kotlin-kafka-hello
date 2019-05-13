@@ -2,6 +2,14 @@
 
 [We followed a tutorial online](https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html).
 
+## Running this app
+
+You need to know the address of your kafka broker, then:
+
+```sh
+gradle run --args='0.0.0.0:32784 happy_topic'
+```
+
 ## Running a kafka cluster using docker-compose
 
 [wurstmeister maintains a lovely docker-compose configuration](http://wurstmeister.github.io/kafka-docker/).  As mentioned, change the environment variable `KAFKA_ADVERTISED_HOST_NAME` in `docker-compose.yml`.
@@ -26,10 +34,3 @@ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic topic \
 --bootstrap-server `broker-list.sh|head`
 ```
 
-## Running this app
-
-You need to know the address of your kafka broker, then:
-
-```sh
-gradle run --args='0.0.0.0:32784 happy_topic'
-```
