@@ -6,7 +6,7 @@
 
 [wurstmeister maintains a lovely docker-compose configuration](http://wurstmeister.github.io/kafka-docker/).  As mentioned, change the environment variable `KAFKA_ADVERTISED_HOST_NAME` in `docker-compose.yml`.
 
-Connect to a kafka container, with an external IP of `192.168.86.240`:
+Connect to a kafka container, with an external IP of `192.168.1.1`:
 
 ```sh
 ./start-kafka-shell.sh 192.168.1.111 192.168.1.111:2181
