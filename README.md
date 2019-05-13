@@ -25,3 +25,11 @@ Or a consumer:
 $KAFKA_HOME/bin/kafka-console-consumer.sh --topic topic \
 --bootstrap-server `broker-list.sh|head`
 ```
+
+## Running this app
+
+You need to know the address of your kafka broker, then:
+
+```sh
+gradle run --args='0.0.0.0:32784 happy_topic hello00'
+```
