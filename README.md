@@ -1,6 +1,6 @@
 # Kafka with Kotlin
 
-[We followed a tutorial online](https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html).
+[We followed Alexis Seigneurin's tutorial online](https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html).
 
 ## Running this app
 
