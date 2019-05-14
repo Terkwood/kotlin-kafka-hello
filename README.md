@@ -2,6 +2,8 @@
 
 [We followed Alexis Seigneurin's tutorial online](https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html).
 
+[This example of Kafka with Kotlin coroutines](https://dev.to/viniciusccarvalho/kotlin-coroutine-based-kafkaproducer-extension-3fc2) was very helpful as well.
+
 ## Running this app
 
 You need to know the address of your kafka broker, then:

@@ -1,11 +1,13 @@
 package hello
 
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.Producer
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import org.apache.kafka.clients.producer.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
@@ -27,19 +29,16 @@ fun main(args: Array<String>) {
     println("time in serial: $elapsedSer")
 
     val elapsedCo = measureTimeMillis {
-        runBlocking {
-            for (i in 0x00..0xFF) {
-                launch {
-                    val message = "co $i"
-                    val futureResult = producer.send(ProducerRecord(topic, message))
-                    // wait for ack
-                    futureResult.get()
-                }
+        for (i in 0x00..0xFF) {
+            GlobalScope.async {
+                val message = "co $i"
+                producer.send(ProducerRecord(topic, message))
             }
         }
     }
-    println("time with coroutine: $elapsedCo")
+    println("time in co: $elapsedCo")
 }
+
 
 private fun createProducer(brokers: String): Producer<String, String> {
     val props = Properties()
@@ -48,3 +47,15 @@ private fun createProducer(brokers: String): Producer<String, String> {
     props["value.serializer"] = StringSerializer::class.java.canonicalName
     return KafkaProducer<String, String>(props)
 }
+
+suspend inline fun <reified K : Any, reified V : Any> KafkaProducer<K, V>.dispatch(record: ProducerRecord<K, V>) =
+    suspendCoroutine<RecordMetadata> { continuation ->
+        val callback = Callback { metadata, exception ->
+            if (metadata == null) {
+                continuation.resumeWithException(exception!!)
+            } else {
+                continuation.resume(metadata)
+            }
+        }
+        this.send(record, callback)
+    }
