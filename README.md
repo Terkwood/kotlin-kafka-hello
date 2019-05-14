@@ -2,7 +2,7 @@
 
 [We followed Alexis Seigneurin's tutorial online](https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html).
 
-[This example of Kafka with Kotlin coroutines](https://dev.to/viniciusccarvalho/kotlin-coroutine-based-kafkaproducer-extension-3fc2) was very helpful as well.
+[This example of Kafka with Kotlin coroutines](https://dev.to/viniciusccarvalho/kotlin-coroutine-based-kafkaproducer-extension-3fc2) was very helpful, as well as [this example of parallel map with async blocks](https://jivimberg.io/blog/2018/05/04/parallel-map-in-kotlin/).
 
 ## Running this app
 
