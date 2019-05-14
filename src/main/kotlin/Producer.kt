@@ -6,21 +6,39 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     val brokers = args[0]
     val topic = args[1]
     val producer = createProducer(brokers)
-    runBlocking {
+
+    // maybe the first message takes a while
+    producer.send(ProducerRecord(topic, "hello"))
+
+    val elapsedSer = measureTimeMillis {
         for (i in 0x00..0xFF) {
-            launch {
-                val message = "hello $i"
-                val futureResult = producer.send(ProducerRecord(topic, message))
-                // wait for ack
-                futureResult.get()
+            val message = "ser $i"
+            val futureResult = producer.send(ProducerRecord(topic, message))
+            // wait for ack
+            futureResult.get()
+        }
+    }
+    println("time in serial: $elapsedSer")
+
+    val elapsedCo = measureTimeMillis {
+        runBlocking {
+            for (i in 0x00..0xFF) {
+                launch {
+                    val message = "co $i"
+                    val futureResult = producer.send(ProducerRecord(topic, message))
+                    // wait for ack
+                    futureResult.get()
+                }
             }
         }
     }
+    println("time with coroutine: $elapsedCo")
 }
 
 private fun createProducer(brokers: String): Producer<String, String> {
