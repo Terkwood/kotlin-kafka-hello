@@ -12,6 +12,11 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.system.measureTimeMillis
 
+const val SER_MAX = 0xF
+const val CO_MAX = 0xFFFF
+const val MSG_PAD = 8
+const val TIME_PAD = 4
+
 fun main(args: Array<String>) {
     val brokers = args[0]
     val topic = args[1]
@@ -21,24 +26,24 @@ fun main(args: Array<String>) {
     producer.send(ProducerRecord(topic, "hello"))
 
     val elapsedSer = measureTimeMillis {
-        for (i in 0x00..0xFF) {
+        for (i in 0x0..SER_MAX) {
             val message = "ser $i"
             val futureResult = producer.send(ProducerRecord(topic, message))
             // wait for ack
             futureResult.get()
         }
     }
-    println("time in serial: ${elapsedSer.toString().padStart(4)} ms")
-
+    println("time in serial (${SER_MAX.toString().padStart(MSG_PAD)} messages): ${elapsedSer.toString().padStart(
+        TIME_PAD)} ms")
     val elapsedCo = measureTimeMillis {
         runBlocking {
-            (0x00..0xFF).pmap {
+            (0x0..CO_MAX).pmap {
                 val message = "co $it"
                 producer.send(ProducerRecord(topic, message))
             }
         }
     }
-    println("time in async : ${elapsedCo.toString().padStart(4)} ms")
+    println("time in async (${CO_MAX.toString().padStart(MSG_PAD)} messages): ${elapsedCo.toString().padStart(TIME_PAD)} ms")
 }
 
 
