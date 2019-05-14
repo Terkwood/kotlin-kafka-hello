@@ -4,6 +4,8 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import org.apache.kafka.clients.producer.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -29,9 +31,9 @@ fun main(args: Array<String>) {
     println("time in serial: ${elapsedSer.toString().padStart(4)} ms")
 
     val elapsedCo = measureTimeMillis {
-        for (i in 0x00..0xFF) {
-            GlobalScope.async {
-                val message = "co $i"
+        runBlocking {
+            (0x00..0xFF).pmap {
+                val message = "co $it"
                 producer.send(ProducerRecord(topic, message))
             }
         }
@@ -59,3 +61,7 @@ suspend inline fun <reified K : Any, reified V : Any> KafkaProducer<K, V>.dispat
         }
         this.send(record, callback)
     }
+
+suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
+    map { async { f(it) } }.map { it.await() }
+}
