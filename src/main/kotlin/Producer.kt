@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
             futureResult.get()
         }
     }
-    println("time in serial: $elapsedSer")
+    println("time in serial: ${elapsedSer.toString().padStart(4)} ms")
 
     val elapsedCo = measureTimeMillis {
         for (i in 0x00..0xFF) {
@@ -36,7 +36,7 @@ fun main(args: Array<String>) {
             }
         }
     }
-    println("time in co: $elapsedCo")
+    println("time in async : ${elapsedCo.toString().padStart(4)} ms")
 }
 
 
